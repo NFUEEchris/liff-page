@@ -98,7 +98,7 @@
                 const idToken=liff.getDecodedIDToken();
                 
                 const currentLang = liff.getLanguage(); // e.g., "zh-TW"
-                get_current_lang(idToken , currentLang);
+                // get_current_lang(idToken , currentLang);
                 const select = document.getElementById('langSelect');
                 if(currentLang.includes('en')) select.value = 'en-US';
                 else if(currentLang.includes('ja')) select.value = 'ja-JP';
@@ -136,4 +136,5 @@
         main();
     </script>
 </body>
+
 </html>
