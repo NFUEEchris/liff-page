@@ -127,7 +127,7 @@
                         await liff.sendMessages([
                             {
                                 type: 'text',
-                                text: `設定語言:${langText}` 
+                                text: `/set_language ${langText}` 
                             }
                         ]);
                         liff.closeWindow(); // 發送後關閉視窗
@@ -145,3 +145,4 @@
     </script>
 </body>
 </html>
+
