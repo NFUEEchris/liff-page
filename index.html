@@ -16,6 +16,7 @@
 <body>
     <div class="card">
         <h2>請選擇語言</h2>
+        <p>當前語言：<span id="display-lang"> 讀取中... </span></p>
         <select id="langSelect">
             <option value="zh-TW">繁體中文</option>
             <option value="en-US">English</option>
@@ -28,8 +29,62 @@
     <script>
         // 設定你的 LIFF ID
         const LIFF_ID = "2008641579-BdRYOWPn"; 
+        const backendURL='https://amada-formless-undictatorially.ngrok-free.dev'
+        function saveAndFetch(userId_,lang_)
+        {
+            const payload = { userId: userId_, lang: lang_ };
+            fetch( backendURL+'/DB/save', {  // 你的後端 URL
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json',
+                        'ngrok-skip-browser-warning': 'true'},
+                body: JSON.stringify(payload)
+            })
+            .then(response => response.json())
+            .then(res => {
+                console.log("後端回傳完整包:", res);
+
+                const redisData = res.data; 
+                if (redisData && redisData.lang) {
+                    document.getElementById("lang-display").innerText = redisData.lang;
+                    document.getElementById("result-box").innerText = "讀取成功！完整內容：" + JSON.stringify(redisData);
+                } else {
+                    document.getElementById("result-box").innerText = "沒有找到 lang 資料";
+                }
+            })
+            .catch(err => {
+                console.error("發生錯誤:", err);
+                document.getElementById("result-box").innerText = "發生錯誤";
+            });
+        }
+
+        function get_current_lang(userId_,preset_lang)
+        {
+            const payload = { userId: userId, lang : preset_lang};
+            fetch( backendURL+'/DB/get', {  // 你的後端 URL
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            })
+            .then(response => response.json())
+            .then(res => {
+                console.log("後端回傳完整包:", res);
+
+                const redisData = res.data; 
+                if (redisData && redisData.lang) {
+                    document.getElementById("lang-display").innerText = redisData.lang;
+                    document.getElementById("result-box").innerText = "讀取成功！完整內容：" + JSON.stringify(redisData);
+                } else {
+                    document.getElementById("result-box").innerText = "沒有找到 lang 資料";
+                }
+            })
+            .catch(err => {
+                console.error("發生錯誤:", err);
+                document.getElementById("result-box").innerText = "發生錯誤";
+            });
+        }
 
         async function main() {
+            
             try {
                 await liff.init({ liffId: LIFF_ID });
                 
@@ -40,7 +95,10 @@
                 }
 
                 // 2. 自動選取使用者當前語言
+                const idToken=liff.getDecodedIDToken();
+                
                 const currentLang = liff.getLanguage(); // e.g., "zh-TW"
+                get_current_lang(idToken , currentLang);
                 const select = document.getElementById('langSelect');
                 if(currentLang.includes('en')) select.value = 'en-US';
                 else if(currentLang.includes('ja')) select.value = 'ja-JP';
