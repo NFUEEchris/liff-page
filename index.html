@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>語言設定</title>
     <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+    <script src="https://unpkg.com/vconsole@latest/dist/vconsole.min.js"></script>
     <style>
         body { font-family: sans-serif; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; background-color: #f0f0f0; }
         .card { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 100%; max-width: 300px; text-align: center; }
@@ -94,24 +95,12 @@
                     return;
                 }
                 
-                
-                const context = liff.getContext();
-                const userId = context ? context.userId : null;
-                
-                // 如果 context 取不到，嘗試用 idToken
-                let finalUserId = userId;
-                if (!finalUserId) {
-                    const idToken = liff.getDecodedIDToken();
-                    finalUserId = idToken ? idToken.sub : null;
-                }
-
-                if (!finalUserId) {
-                    alert("無法取得 User ID，請確認 LIFF 設定");
-                    return;
-                }
-
+                const profile = await liff.getProfile();
+                const userId = profile.userId;
+                console.log("User ID found:", userId);
                 // 處理預設語言
-                const currentLang = liff.getLanguage(); 
+                const currentLang = liff.getLanguage();
+                 
                 let defaultSelectValue = 'zh-TW';
                 if (currentLang.includes('en')) defaultSelectValue = 'en-US';
                 else if (currentLang.includes('ja')) defaultSelectValue = 'ja-JP';
@@ -121,7 +110,7 @@
                 select.value = defaultSelectValue;
 
                 // 呼叫後端讀取設定
-                get_current_lang(finalUserId, defaultSelectValue);
+                get_current_lang(userId, defaultSelectValue);
 
                 // 3. 啟用按鈕
                 const btn = document.getElementById('submitBtn');
@@ -156,4 +145,3 @@
     </script>
 </body>
 </html>
-
