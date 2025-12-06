@@ -93,9 +93,23 @@
                     document.getElementById('msg').innerText = "請在 LINE App 中開啟";
                     return;
                 }
+                
+                const context = liff.getContext();
+                const userId = context ? context.userId : null;
+                
+                // 如果 context 取不到，嘗試用 idToken
+                let finalUserId = userId;
+                if (!finalUserId) {
+                    const idToken = liff.getDecodedIDToken();
+                    finalUserId = idToken ? idToken.sub : null;
+                }
 
-                // 2. 自動選取使用者當前語言
-                const idToken=liff.getDecodedIDToken();
+                if (!finalUserId) {
+                    alert("無法取得 User ID，請確認 LIFF 設定");
+                    return;
+                }
+                        
+                // const idToken=liff.getDecodedIDToken();
                 
                 const currentLang = liff.getLanguage(); // e.g., "zh-TW"
                 get_current_lang(idToken , currentLang);
@@ -136,6 +150,4 @@
         main();
     </script>
 </body>
-
 </html>
-
