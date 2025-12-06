@@ -121,13 +121,13 @@
                 btn.onclick = async () => {
                     const selectedLang = select.value;
                     const langText = select.options[select.selectedIndex].text;
-                    
+                    saveAndFetch(userId,selectedLang)
                     try {
                         // 這裡會幫使用者發送訊息
                         await liff.sendMessages([
                             {
                                 type: 'text',
-                                text: `設定語言:${selectedLang}` 
+                                text: `設定語言:${langText}` 
                             }
                         ]);
                         liff.closeWindow(); // 發送後關閉視窗
