@@ -46,7 +46,7 @@
 
                 const redisData = res.data; 
                 if (redisData && redisData.lang) {
-                    document.getElementById("lang-display").innerText = redisData.lang;
+                    document.getElementById("display-lang").innerText = redisData.lang;
                     document.getElementById("result-box").innerText = "讀取成功！完整內容：" + JSON.stringify(redisData);
                 } else {
                     document.getElementById("result-box").innerText = "沒有找到 lang 資料";
@@ -72,7 +72,7 @@
 
                 const redisData = res.data; 
                 if (redisData && redisData.lang) {
-                    document.getElementById("lang-display").innerText = redisData.lang;
+                    document.getElementById("display-lang").innerText = redisData.lang;
                     document.getElementById("result-box").innerText = "讀取成功！完整內容：" + JSON.stringify(redisData);
                 } else {
                     document.getElementById("result-box").innerText = "沒有找到 lang 資料";
@@ -145,4 +145,3 @@
     </script>
 </body>
 </html>
-
