@@ -94,6 +94,7 @@
                     return;
                 }
                 
+                
                 const context = liff.getContext();
                 const userId = context ? context.userId : null;
                 
@@ -108,15 +109,19 @@
                     alert("無法取得 User ID，請確認 LIFF 設定");
                     return;
                 }
-                        
-                // const idToken=liff.getDecodedIDToken();
-                
-                const currentLang = liff.getLanguage(); // e.g., "zh-TW"
-                get_current_lang(idToken , currentLang);
+
+                // 處理預設語言
+                const currentLang = liff.getLanguage(); 
+                let defaultSelectValue = 'zh-TW';
+                if (currentLang.includes('en')) defaultSelectValue = 'en-US';
+                else if (currentLang.includes('ja')) defaultSelectValue = 'ja-JP';
+
+                // 先設定選單為系統語言 (稍後如果 DB 有值會被 get_current_lang 覆蓋)
                 const select = document.getElementById('langSelect');
-                if(currentLang.includes('en')) select.value = 'en-US';
-                else if(currentLang.includes('ja')) select.value = 'ja-JP';
-                else select.value = 'zh-TW';
+                select.value = defaultSelectValue;
+
+                // 呼叫後端讀取設定
+                get_current_lang(finalUserId, defaultSelectValue);
 
                 // 3. 啟用按鈕
                 const btn = document.getElementById('submitBtn');
