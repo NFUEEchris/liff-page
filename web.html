@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>語言設定</title>
+    <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+    <style>
+        body { font-family: sans-serif; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; background-color: #f0f0f0; }
+        .card { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 100%; max-width: 300px; text-align: center; }
+        select { width: 100%; padding: 10px; margin: 20px 0; border-radius: 5px; border: 1px solid #ccc; font-size: 16px; }
+        button { width: 100%; padding: 12px; background-color: #06C755; color: white; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; }
+        button:disabled { background-color: #ccc; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>請選擇語言</h2>
+        <select id="langSelect">
+            <option value="zh-TW">繁體中文</option>
+            <option value="en-US">English</option>
+            <option value="ja-JP">日本語</option>
+        </select>
+        <button id="submitBtn" disabled>載入中...</button>
+        <p id="msg" style="color: red; font-size: 12px; margin-top: 10px;"></p>
+    </div>
+
+    <script>
+        // 設定你的 LIFF ID
+        const LIFF_ID = "2008641579-BdRYOWPn"; 
+
+        async function main() {
+            try {
+                await liff.init({ liffId: LIFF_ID });
+                
+                // 1. 檢查環境
+                if (!liff.isInClient()) {
+                    document.getElementById('msg').innerText = "請在 LINE App 中開啟";
+                    return;
+                }
+
+                // 2. 自動選取使用者當前語言
+                const currentLang = liff.getLanguage(); // e.g., "zh-TW"
+                const select = document.getElementById('langSelect');
+                if(currentLang.includes('en')) select.value = 'en-US';
+                else if(currentLang.includes('ja')) select.value = 'ja-JP';
+                else select.value = 'zh-TW';
+
+                // 3. 啟用按鈕
+                const btn = document.getElementById('submitBtn');
+                btn.innerText = "確認設定";
+                btn.disabled = false;
+
+                // 4. 按鈕點擊事件
+                btn.onclick = async () => {
+                    const selectedLang = select.value;
+                    const langText = select.options[select.selectedIndex].text;
+                    
+                    try {
+                        // 這裡會幫使用者發送訊息
+                        await liff.sendMessages([
+                            {
+                                type: 'text',
+                                text: `設定語言:${selectedLang}` 
+                            }
+                        ]);
+                        liff.closeWindow(); // 發送後關閉視窗
+                    } catch (err) {
+                        alert("發送失敗，請確認已加入官方帳號好友");
+                    }
+                };
+
+            } catch (err) {
+                console.error(err);
+                document.getElementById('msg').innerText = "初始化失敗";
+            }
+        }
+        main();
+    </script>
+</body>
+</html>
