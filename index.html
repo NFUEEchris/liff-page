@@ -60,7 +60,7 @@
 
         function get_current_lang(userId_,preset_lang)
         {
-            const payload = { userId: userId, lang : preset_lang};
+            const payload = { userId: userId_, lang : preset_lang};
             fetch( backendURL+'/DB/get', {  // 你的後端 URL
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -145,3 +145,4 @@
     </script>
 </body>
 </html>
+
