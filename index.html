@@ -32,8 +32,8 @@
         
         // const LIFF_ID = "2008641579-BdRYOWPn"; 
         // const backendURL='https://amada-formless-undictatorially.ngrok-free.dev'
-        const LIFF_ID = ${{env.LIFF_ID}};
-        const backendURL= ${{env.backendURL}};
+        const LIFF_ID = "<%= process.env.LIFF_ID %>";
+        const backendURL = "<%= process.env.backendURL %>";
         function saveAndFetch(userId_,lang_)
         {
             const payload = { userId: userId_, lang: lang_ };
@@ -148,5 +148,6 @@
     </script>
 </body>
 </html>
+
 
 
